@@ -14,6 +14,7 @@
   const NEUTRAL_RESULT = '#F0F1E8';
   const SESSION_KEY = 'chroma-session-v1';
   const SAVED_KEY = 'chroma-colors';
+  const INSTALL_PROMPT_KEY = 'chroma-install-prompt-dismissed';
   const TABS = ['studio', 'bold', 'earth'];
   const MIX_DURATION = 3000;
   const GATHER_START = 1500;
@@ -191,6 +192,7 @@
   };
 
   let busy = false;
+  let deferredInstallPrompt = null;
 
   const canEnter = step =>
     step === 1
@@ -1241,6 +1243,108 @@
     }, prefersReduced() ? 250 : 1450);
   }
 
+  function isStandalone() {
+    return matchMedia('(display-mode: standalone)').matches
+      || navigator.standalone === true;
+  }
+
+  function showInstallInstructions() {
+    const isAppleMobile =
+      /iPad|iPhone|iPod/.test(navigator.userAgent)
+      || (
+        navigator.platform === 'MacIntel'
+        && navigator.maxTouchPoints > 1
+      );
+
+    const instructions = isAppleMobile
+      ? 'In Safari, tap Share, then choose “Add to Home Screen”.'
+      : /Android/.test(navigator.userAgent)
+        ? 'Open your browser menu and choose “Install app” or “Add to Home screen”.'
+        : 'Open your browser menu and choose “Install Chroma” or “Install this site as an app”.';
+
+    $('installDescription').textContent = instructions;
+    $('installApp').textContent = 'Got it';
+  }
+
+  function setupInstallPrompt() {
+    const dialog = $('installPrompt');
+
+    window.addEventListener('beforeinstallprompt', event => {
+      event.preventDefault();
+      deferredInstallPrompt = event;
+      $('installApp').textContent = 'Install Chroma';
+      $('installDescription').textContent =
+        'Add Chroma to your device for quick access and a focused, app-like experience.';
+    });
+
+    window.addEventListener('appinstalled', () => {
+      storage.write(INSTALL_PROMPT_KEY, true);
+      deferredInstallPrompt = null;
+
+      if (dialog.open) dialog.close();
+    });
+
+    $('installApp').addEventListener('click', async () => {
+      if (!deferredInstallPrompt) {
+        if ($('installApp').textContent === 'Got it') {
+          storage.write(INSTALL_PROMPT_KEY, true);
+          dialog.close();
+        } else {
+          showInstallInstructions();
+        }
+
+        return;
+      }
+
+      const installEvent = deferredInstallPrompt;
+      deferredInstallPrompt = null;
+
+      try {
+        await installEvent.prompt();
+
+        const { outcome } = await installEvent.userChoice;
+
+        if (outcome === 'accepted') {
+          storage.write(INSTALL_PROMPT_KEY, true);
+          dialog.close();
+        } else {
+          $('installApp').textContent = 'How to install';
+        }
+      } catch (error) {
+        console.error('Unable to open the app install prompt.', error);
+        showInstallInstructions();
+      }
+    });
+
+    $('dismissInstall').addEventListener('click', () => {
+      storage.write(INSTALL_PROMPT_KEY, true);
+      dialog.close();
+    });
+
+    dialog.addEventListener('cancel', () => {
+      storage.write(INSTALL_PROMPT_KEY, true);
+    });
+
+    setTimeout(() => {
+      if (
+        !isStandalone()
+        && storage.read(INSTALL_PROMPT_KEY) !== true
+      ) {
+        dialog.showModal();
+      }
+    }, 2000);
+  }
+
+  function registerServiceWorker() {
+    if (!('serviceWorker' in navigator)) return;
+
+    navigator.serviceWorker
+      .register('/sw.js')
+      .catch(error => {
+        console.error('Unable to register the Chroma service worker.', error);
+      });
+  }
+
   /* ---------- Initialization ---------- */
 
   function init() {
@@ -1253,6 +1357,8 @@
         ? 'Your last mix is ready to resume'
         : 'Opening your color studio';
 
+    setupInstallPrompt();
+    registerServiceWorker();
     bindEvents();
     renderTabs();
     renderAll();

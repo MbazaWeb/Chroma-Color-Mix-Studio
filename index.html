@@ -5,9 +5,14 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#ffffff">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Chroma">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>Chroma — Color Mix Studio</title>
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="manifest" href="/manifest.webmanifest">
   <link rel="stylesheet" href="index.css">
 </head>
 <body>
@@ -145,6 +150,13 @@
     <p>This studio averages the red, green and blue channels of your colors, weighted by the parts you choose. More parts give a color more influence.</p>
     <p>Digital RGB blending is a creative screen tool. Physical pigments mix differently, so use a paint sample for real-world color matching.</p>
     <button class="primary" id="close">Got it</button>
+  </dialog>
+
+  <dialog id="installPrompt" aria-labelledby="installTitle" aria-describedby="installDescription">
+    <h2 id="installTitle">Install Chroma Studio</h2>
+    <p id="installDescription">Add Chroma to your device for quick access and a focused, app-like experience.</p>
+    <button class="primary" id="installApp">How to install</button>
+    <button class="text-button" id="dismissInstall">Not now</button>
   </dialog>
 
   <script src="index.js" defer></script>
