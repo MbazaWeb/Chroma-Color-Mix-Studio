@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Chroma — Color Mix Studio</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <div class="splash" id="splash" role="status" aria-label="Opening Chroma Studio">
+    <div class="brand"><span class="logo" aria-hidden="true"><i></i><i></i><i></i></span>chroma</div>
+    <p>A world of color awaits.</p>
+    <div class="splash-track" aria-hidden="true"><i></i></div>
+    <small id="splashNote">Opening your color studio</small>
+  </div>
+  <noscript>This color studio needs JavaScript to mix colors.</noscript>
+
+  <a class="skip-link" href="#main">Skip to studio</a>
+  <header>
+    <div class="brand"><span class="logo" aria-hidden="true"><i></i><i></i><i></i></span>chroma<span class="tag">/ color mix studio</span></div>
+    <button class="pill" id="help">A LITTLE COLOR THEORY ↗</button>
+  </header>
+
+  <main id="main">
+    <div class="intro">
+      <div>
+        <div class="eyebrow">A playground for your palette</div>
+        <h1 id="heading" tabindex="-1">Pick your starting colors.</h1>
+      </div>
+      <p id="subheading">Choose up to 8 shades. Your next favorite color starts with a little curiosity.</p>
+    </div>
+
+    <nav class="progress" id="progress" aria-label="Your progress">
+      <button class="active" data-step="1" aria-current="step"><b>01</b>Pick colors</button>
+      <i></i>
+      <button data-step="2" disabled><b>02</b>Mix colors</button>
+      <i></i>
+      <button data-step="3" disabled><b>03</b>Your result</button>
+    </nav>
+
+    <div class="workspace">
+      <!-- Step 1: choose colors -->
+      <section class="card" id="screen1" aria-label="Pick colors">
+        <div class="section-head">
+          <h2><span class="step">01</span>Pick your colors</h2>
+          <span class="eyebrow" id="colorCount">60 shades</span>
+        </div>
+        <div class="tabs" role="tablist" aria-label="Palette collection">
+          <button class="active" role="tab" aria-selected="true" data-tab="studio">Studio palette</button>
+          <button role="tab" aria-selected="false" data-tab="bold">Bold essentials</button>
+          <button role="tab" aria-selected="false" data-tab="earth">Earth tones</button>
+        </div>
+        <div class="palette" id="palette" role="group" aria-label="Available colors"></div>
+        <div class="palette-note">
+          <span>Tap a shade to add it to your mix</span>
+          <label class="custom">Custom <input type="color" id="custom" value="#b8ce74" aria-label="Add custom color"></label>
+        </div>
+        <form class="hex-entry" id="hexForm">
+          <label for="hexInput">Have a specific color?</label>
+          <div><input id="hexInput" name="hex" placeholder="#A4B878" maxlength="7" pattern="#?[0-9a-fA-F]{6}" autocomplete="off" spellcheck="false" aria-describedby="hexHint" required><button class="secondary" type="submit">Add HEX +</button></div>
+          <small id="hexHint">Enter a six-digit HEX code.</small>
+        </form>
+        <div class="selection-tray" id="selectionTray"></div>
+        <div class="step-actions">
+          <span id="selectionCount">Choose a color to start</span>
+          <button class="primary" id="next">Continue to mixing →</button>
+        </div>
+      </section>
+
+      <!-- Step 2: adjust the recipe, or watch it blend -->
+      <section id="screen2" aria-label="Mix colors" hidden>
+        <button class="text-button back" id="backPick">← Back to colors</button>
+        <div class="card" id="recipeView">
+          <div class="section-head">
+            <h2><span class="step">02</span>Adjust your mix</h2>
+            <button class="text-button" id="equal">Equal parts ↔</button>
+          </div>
+          <div id="recipe" class="recipe"></div>
+          <div class="live-blend"><span>Live blend preview</span><i id="liveColor"></i><b id="liveHex"></b></div>
+          <div id="composition" class="composition" aria-label="Recipe proportions"></div>
+          <div class="actions">
+            <button class="primary" id="mix">Mix my colors →</button>
+            <button class="secondary" id="reset" aria-label="Reset mix">↺ Reset</button>
+          </div>
+        </div>
+        <section class="card mixing-stage" id="mixView" role="status" aria-live="polite" hidden>
+          <div class="mix-orbit"><canvas id="mixCanvas" aria-hidden="true"></canvas></div>
+          <span class="eyebrow">A little color alchemy</span>
+          <h2 id="mixMessage">Bringing your colors together…</h2>
+          <div class="loading"><i></i></div>
+          <p>Your new hue is on its way.</p>
+        </section>
+      </section>
+
+      <!-- Step 3: result -->
+      <section id="screen3" aria-label="Results" hidden>
+        <button class="text-button back" id="backMix">← Fine-tune your mix</button>
+        <article class="card preview-card">
+          <div class="preview-top">
+            <h2><span class="step">03</span>Your new hue</h2>
+          </div>
+          <div class="preview" id="preview">
+            <div class="view view-2d" id="view2d">
+            </div>
+          </div>
+          <div class="codes">
+            <button class="code" id="hexCopy"><small>HEX <span class="copy">⧉</span></small><b id="hex">#B7B59C</b></button>
+            <button class="code" id="rgbCopy"><small>RGB <span class="copy">⧉</span></small><b id="rgb">183, 181, 156</b></button>
+          </div>
+          <div class="preview-footer">
+            <span class="status" id="status" role="status">Your blend is ready</span>
+            <button class="save" id="save">＋ Save color</button>
+          </div>
+        </article>
+
+        <section class="card">
+          <div class="section-head">
+            <h2>Your little collection</h2>
+            <button class="text-button" id="clear">Clear all</button>
+          </div>
+          <div id="saved" class="saved-list"></div>
+        </section>
+
+        <div class="result-actions">
+          <button class="secondary" id="export">Download recipe ↓</button>
+          <button class="primary" id="newMix">Create another blend →</button>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      <span>CHROMA STUDIO · Make something unexpected.</span>
+      <span class="device-status" id="deviceStatus" role="status"></span>
+    </footer>
+  </main>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <dialog id="info" aria-labelledby="infoTitle">
+    <h2 id="infoTitle">A little color theory</h2>
+    <p>This studio averages the red, green and blue channels of your colors, weighted by the parts you choose. More parts give a color more influence.</p>
+    <p>Digital RGB blending is a creative screen tool. Physical pigments mix differently, so use a paint sample for real-world color matching.</p>
+    <button class="primary" id="close">Got it</button>
+  </dialog>
+
+  <script src="index.js" defer></script>
+</body>
+</html>
