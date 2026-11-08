@@ -251,11 +251,6 @@ main {
   max-width: 470px;
 }
 
-.intro p {
-  flex: 0 1 260px;
-  padding-top: 25px;
-}
-
 .workspace {
   display: block;
   min-width: 0;
@@ -1079,6 +1074,18 @@ footer {
   font-size: 11px;
 }
 
+.playgo {
+  font-weight: 700;
+}
+
+.play {
+  color: #1d251c;
+}
+
+.go {
+  color: #e54c4c;
+}
+
 .device-status {
   display: flex;
   align-items: center;
@@ -1286,11 +1293,6 @@ dialog .text-button {
     max-width: none;
   }
 
-  .intro p {
-    max-width: 100%;
-    padding-top: 16px;
-  }
-
   .card {
     padding: 22px;
   }
@@ -1343,10 +1345,6 @@ dialog .text-button {
 
   .intro {
     margin-bottom: 24px;
-  }
-
-  .intro p {
-    font-size: 14px;
   }
 
   .card {

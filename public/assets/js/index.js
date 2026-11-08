@@ -32,16 +32,13 @@ import {
 
   const STEPS = [
     {
-      title: 'Pick your starting colors.',
-      text: ''
+      title: 'Pick your starting colors.'
     },
     {
-      title: 'Find your perfect balance.',
-      text: 'Give each color its share, then watch them come together.'
+      title: 'Find your perfect balance.'
     },
     {
-      title: 'Meet your new hue.',
-      text: 'A color made by you. Copy it, save it, or fine-tune it.'
+      title: 'Meet your new hue.'
     }
   ];
 
@@ -377,9 +374,6 @@ import {
     $('heading').textContent =
       STEPS[state.step - 1].title;
 
-    const subheading = $('subheading');
-    subheading.textContent = STEPS[state.step - 1].text;
-    subheading.hidden = !subheading.textContent;
   }
 
   function renderSaved() {
@@ -1143,19 +1137,11 @@ import {
       },
 
       save: saveCurrent,
-      clear: clearSaved,
-      help: () => $('info').showModal(),
-      close: () => $('info').close()
+      clear: clearSaved
     };
 
     Object.entries(actions).forEach(([id, fn]) => {
       $(id).addEventListener('click', fn);
-    });
-
-    $('info').addEventListener('click', e => {
-      if (e.target === e.currentTarget) {
-        e.currentTarget.close();
-      }
     });
 
     window.addEventListener('pagehide', persist);
