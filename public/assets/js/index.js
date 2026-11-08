@@ -7,6 +7,7 @@ import {
   luma,
   mixRgb,
   shares,
+  toneFrequency,
   toHex,
   toRgb,
   totalWeight
@@ -25,10 +26,11 @@ import {
   const SESSION_KEY = 'chroma-session-v1';
   const SAVED_KEY = 'chroma-colors';
   const INSTALL_PROMPT_KEY = 'chroma-install-prompt-dismissed';
+  const SOUND_KEY = 'chroma-sound-enabled';
   const TABS = ['studio', 'bold', 'earth'];
-  const MIX_DURATION = 3000;
-  const GATHER_START = 1500;
-  const GATHER_END = 2600;
+  const MIX_DURATION = 1800;
+  const GATHER_START = 350;
+  const GATHER_END = 1300;
 
   const STEPS = [
     {
@@ -114,6 +116,10 @@ import {
     }
   };
 
+  let soundEnabled = storage.read(SOUND_KEY) !== false;
+  let audioContext = null;
+  let masterGain = null;
+
   const isValidEntries = list =>
     Array.isArray(list)
     && list.length <= MAX_COLORS
@@ -178,6 +184,178 @@ import {
       () => el.classList.remove('show'),
       2300
     );
+  }
+
+  function updateSoundToggle() {
+    const button = $('soundToggle');
+
+    button.textContent = soundEnabled ? 'Sound on' : 'Sound off';
+    button.setAttribute('aria-pressed', String(soundEnabled));
+    button.setAttribute(
+      'aria-label',
+      soundEnabled ? 'Mute color sounds' : 'Enable color sounds'
+    );
+  }
+
+  function getAudioContext() {
+    if (!soundEnabled) return null;
+
+    const AudioContextConstructor =
+      window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioContextConstructor) {
+      toast('Sound effects are not supported by this browser');
+      return null;
+    }
+
+    try {
+      if (!audioContext) {
+        audioContext = new AudioContextConstructor();
+        masterGain = audioContext.createGain();
+        masterGain.gain.value = 0.45;
+        masterGain.connect(audioContext.destination);
+      }
+
+      if (audioContext.state === 'suspended') {
+        audioContext.resume().catch(error => {
+          console.error('Unable to resume audio playback.', error);
+        });
+      }
+
+      return audioContext;
+    } catch (error) {
+      console.error('Unable to initialize audio playback.', error);
+      toast('Sound effects could not be started');
+      return null;
+    }
+  }
+
+  function playTone(context, frequency, startAt, duration, volume, type) {
+    try {
+      const oscillator = context.createOscillator();
+      const envelope = context.createGain();
+      const endAt = startAt + duration;
+
+      oscillator.type = type;
+      oscillator.frequency.setValueAtTime(frequency, startAt);
+      envelope.gain.setValueAtTime(0.0001, startAt);
+      envelope.gain.exponentialRampToValueAtTime(volume, startAt + 0.025);
+      envelope.gain.exponentialRampToValueAtTime(0.0001, endAt);
+
+      oscillator.connect(envelope);
+      envelope.connect(masterGain);
+      oscillator.start(startAt);
+      oscillator.stop(endAt + 0.03);
+    } catch (error) {
+      console.error('Unable to play a color sound.', error);
+    }
+  }
+
+  function playColorSound(hex) {
+    const context = getAudioContext();
+
+    if (!context) return;
+
+    const frequency = toneFrequency(hex);
+    const saturation = Math.max(...toRgb(hex)) - Math.min(...toRgb(hex));
+    const startAt = context.currentTime;
+
+    playTone(
+      context,
+      frequency,
+      startAt,
+      0.22,
+      0.075,
+      saturation > 90 ? 'triangle' : 'sine'
+    );
+    playTone(context, frequency * 2, startAt, 0.16, 0.018, 'sine');
+  }
+
+  function startMixSound(hex) {
+    const context = getAudioContext();
+
+    if (!context) return () => {};
+
+    const startAt = context.currentTime;
+    const endAt = startAt + MIX_DURATION / 1000;
+    const envelopes = [];
+    const baseFrequency = toneFrequency(hex) / 2;
+
+    try {
+      for (const [ratio, volume] of [[1, 0.022], [1.5, 0.009]]) {
+        const oscillator = context.createOscillator();
+        const envelope = context.createGain();
+
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(baseFrequency * ratio, startAt);
+        oscillator.frequency.linearRampToValueAtTime(
+          baseFrequency * ratio * 1.12,
+          endAt
+        );
+        envelope.gain.setValueAtTime(0.0001, startAt);
+        envelope.gain.linearRampToValueAtTime(volume, startAt + 0.2);
+        envelope.gain.setValueAtTime(volume, endAt - 0.2);
+        envelope.gain.linearRampToValueAtTime(0.0001, endAt);
+
+        oscillator.connect(envelope);
+        envelope.connect(masterGain);
+        oscillator.start(startAt);
+        oscillator.stop(endAt + 0.03);
+        envelopes.push(envelope);
+      }
+    } catch (error) {
+      console.error('Unable to play the mixing sound.', error);
+      return () => {};
+    }
+
+    return () => {
+      const stopAt = context.currentTime;
+
+      if (stopAt < endAt) {
+        envelopes.forEach(envelope => {
+          envelope.gain.cancelScheduledValues(stopAt);
+          envelope.gain.setTargetAtTime(0.0001, stopAt, 0.04);
+        });
+      }
+    };
+  }
+
+  function playMixComplete(hex) {
+    const context = getAudioContext();
+
+    if (!context) return;
+
+    const startAt = context.currentTime;
+    const root = toneFrequency(hex);
+
+    [1, 1.25, 1.5].forEach((ratio, index) => {
+      playTone(
+        context,
+        root * ratio,
+        startAt + index * 0.11,
+        0.38,
+        0.065,
+        'sine'
+      );
+    });
+  }
+
+  function toggleSound() {
+    soundEnabled = !soundEnabled;
+    storage.write(SOUND_KEY, soundEnabled);
+
+    if (audioContext && masterGain) {
+      const target = soundEnabled ? 0.45 : 0;
+      masterGain.gain.setTargetAtTime(
+        target,
+        audioContext.currentTime,
+        0.025
+      );
+    }
+
+    updateSoundToggle();
+
+    if (soundEnabled) getAudioContext();
   }
 
   async function copyText(text) {
@@ -435,6 +613,7 @@ import {
       weight: START_WEIGHT
     });
 
+    playColorSound(color);
     recipeChanged();
     renderAll();
     persist();
@@ -686,7 +865,7 @@ import {
     }
 
     const particles = Array.from(
-      { length: 140 },
+      { length: 90 },
       () => {
         const r = Math.random();
 
@@ -852,6 +1031,7 @@ import {
     $('progress').inert = true;
 
     const mixed = blend(state.entries);
+    const stopMixSound = startMixSound(mixed);
 
     showMixing(true);
 
@@ -868,6 +1048,8 @@ import {
         'Finding a happy medium…';
     });
 
+    stopMixSound();
+    playMixComplete(mixed);
     state.result = mixed;
     state.mixed = true;
     state.dirty = false;
@@ -973,6 +1155,8 @@ import {
   /* ---------- Event wiring ---------- */
 
   function bindEvents() {
+    $('soundToggle').addEventListener('click', toggleSound);
+
     $('palette').addEventListener('click', e => {
       const swatch = e.target.closest('[data-color]');
 
@@ -1154,31 +1338,6 @@ import {
     );
   }
 
-  /* ---------- Splash ---------- */
-
-  function dismissSplash() {
-    const splash = $('splash');
-
-    const surfaces = [
-      document.querySelector('header'),
-      document.querySelector('main')
-    ];
-
-    surfaces.forEach(el => {
-      el.inert = true;
-    });
-
-    setTimeout(() => {
-      splash.classList.add('dismiss');
-
-      surfaces.forEach(el => {
-        el.inert = false;
-      });
-
-      setTimeout(() => splash.remove(), 450);
-    }, prefersReduced() ? 250 : 1450);
-  }
-
   function isStandalone() {
     return matchMedia('(display-mode: standalone)').matches
       || navigator.standalone === true;
@@ -1284,17 +1443,13 @@ import {
   /* ---------- Initialization ---------- */
 
   function init() {
-    const restored = restoreSession();
+    restoreSession();
 
     state.saved = readSavedColors();
 
-    $('splashNote').textContent =
-      restored && state.entries.length
-        ? 'Your last mix is ready to resume'
-        : 'Opening your color studio';
-
     setupInstallPrompt();
     registerServiceWorker();
+    updateSoundToggle();
     bindEvents();
     renderTabs();
     renderAll();
@@ -1306,7 +1461,6 @@ import {
 
     showMixing(false);
 
-    dismissSplash();
     persist();
   }
 

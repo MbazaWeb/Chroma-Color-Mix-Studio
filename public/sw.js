@@ -1,9 +1,10 @@
-const CACHE_NAME = 'chroma-shell-v2';
+const CACHE_NAME = 'chroma-shell-v3';
 const APP_FILES = [
   '/',
   '/index.html',
   '/assets/css/index.css',
   '/assets/js/index.js',
+  '/assets/js/color-utils.js',
   '/manifest.webmanifest',
   '/assets/icons/favicon.png',
   '/assets/icons/icon-192.png',

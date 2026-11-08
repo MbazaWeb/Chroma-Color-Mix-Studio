@@ -12,6 +12,8 @@ The `public/` folder contains the deployable SPA. Its HTML is at the root, while
 
 The site includes a web app manifest and service worker for installability and offline loading. On the first visit, it offers installation where supported. The browser requires a user action before showing its native install prompt; on iPhone and iPad, follow the Share → Add to Home Screen instructions.
 
+Color selections, mixing, and completed blends have generated sound effects. Use the **Sound on/off** control in the header to mute or enable them.
+
 ## Development
 
 - Run the built-in color utility tests with `npm test`.

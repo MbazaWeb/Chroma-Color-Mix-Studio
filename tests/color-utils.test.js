@@ -6,6 +6,7 @@ import {
   luma,
   mixRgb,
   shares,
+  toneFrequency,
   toHex,
   toRgb,
   totalWeight
@@ -35,6 +36,18 @@ test('mixes RGB channels by interpolation', () => {
 test('calculates luma for preview text contrast', () => {
   assert.equal(luma([255, 255, 255]), 255);
   assert.equal(luma([0, 0, 0]), 0);
+});
+
+test('assigns different pitches to different color hues and shades', () => {
+  const tones = [
+    toneFrequency('#E54C4C'),
+    toneFrequency('#4CA66B'),
+    toneFrequency('#417DD1'),
+    toneFrequency('#202020'),
+    toneFrequency('#FFFFFF')
+  ];
+
+  assert.equal(new Set(tones).size, tones.length);
 });
 
 test('blends colors according to their weights', () => {
