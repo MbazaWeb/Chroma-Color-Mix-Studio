@@ -1,13 +1,13 @@
-const CACHE_NAME = 'chroma-shell-v1';
+const CACHE_NAME = 'chroma-shell-v2';
 const APP_FILES = [
   '/',
   '/index.html',
-  '/index.css',
-  '/index.js',
+  '/assets/css/index.css',
+  '/assets/js/index.js',
   '/manifest.webmanifest',
-  '/favicon.png',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png'
+  '/assets/icons/favicon.png',
+  '/assets/icons/icon-192.png',
+  '/assets/icons/icon-512.png'
 ];
 
 self.addEventListener('install', event => {
