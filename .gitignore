@@ -1,0 +1,24 @@
+# Dependencies and local deployment state
+node_modules/
+.vercel/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Test and build output
+coverage/
+test-results/
+playwright-report/
+dist/
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# Operating system and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

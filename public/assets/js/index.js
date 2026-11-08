@@ -1,7 +1,17 @@
 /* Chroma — Color Mix Studio
  * Dependency-free. Palette and recipe state, a canvas blending animation,
- * 2D result view and device-local
- * session restore. */
+ * 2D result view, and device-local session restore. */
+import {
+  blend,
+  isHex,
+  luma,
+  mixRgb,
+  shares,
+  toHex,
+  toRgb,
+  totalWeight
+} from './color-utils.js';
+
 (() => {
   'use strict';
 
@@ -65,69 +75,8 @@
   const prefersReduced = () =>
     matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const isHex = v =>
-    typeof v === 'string' && /^#[0-9a-f]{6}$/i.test(v);
-
-  const toRgb = hex =>
-    [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
-
-  const toHex = rgb => '#' + rgb
-    .map(v => Math.round(clamp(v, 0, 255))
-      .toString(16)
-      .padStart(2, '0'))
-    .join('')
-    .toUpperCase();
-
-  const mixRgb = (a, b, t) =>
-    a.map((v, i) => lerp(v, b[i], t));
-
   const rgba = (c, a = 1) =>
     `rgba(${Math.round(c[0])},${Math.round(c[1])},${Math.round(c[2])},${clamp(a, 0, 1).toFixed(3)})`;
-
-  const luma = ([r, g, b]) =>
-    r * 0.299 + g * 0.587 + b * 0.114;
-
-  const totalWeight = entries =>
-    entries.reduce((sum, e) => sum + e.weight, 0);
-
-  function blend(entries) {
-    const total = totalWeight(entries);
-
-    if (!total) return NEUTRAL_RESULT;
-
-    return toHex([0, 1, 2].map(ch =>
-      entries.reduce(
-        (sum, e) => sum + toRgb(e.hex)[ch] * e.weight,
-        0
-      ) / total
-    ));
-  }
-
-  // Distribute rounding fairly while keeping the total at 100%.
-  function shares(entries) {
-    const total = totalWeight(entries);
-
-    if (!total) return [];
-
-    const exact = entries.map(e => e.weight / total * 100);
-    const values = exact.map(Math.floor);
-
-    const order = exact
-      .map((v, i) => ({
-        i,
-        remainder: v - values[i]
-      }))
-      .sort((a, b) => b.remainder - a.remainder);
-
-    const remaining =
-      100 - values.reduce((a, b) => a + b, 0);
-
-    for (let i = 0; i < remaining; i++) {
-      values[order[i].i]++;
-    }
-
-    return values;
-  }
 
   function buildStudioPalette() {
     return Array.from({ length: 6 }, (_, row) =>

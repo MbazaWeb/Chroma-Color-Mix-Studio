@@ -1,0 +1,10 @@
+{
+  "name": "chroma-color-mix-studio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check public/assets/js/index.js && node --check public/assets/js/color-utils.js && node --check public/sw.js"
+  }
+}
