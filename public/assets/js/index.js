@@ -33,7 +33,7 @@ import {
   const STEPS = [
     {
       title: 'Pick your starting colors.',
-      text: 'Choose up to 8 shades. Your next favorite color starts with a little curiosity.'
+      text: ''
     },
     {
       title: 'Find your perfect balance.',
@@ -377,8 +377,9 @@ import {
     $('heading').textContent =
       STEPS[state.step - 1].title;
 
-    $('subheading').textContent =
-      STEPS[state.step - 1].text;
+    const subheading = $('subheading');
+    subheading.textContent = STEPS[state.step - 1].text;
+    subheading.hidden = !subheading.textContent;
   }
 
   function renderSaved() {
