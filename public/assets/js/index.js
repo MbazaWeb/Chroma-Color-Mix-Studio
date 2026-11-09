@@ -1,3 +1,4 @@
+import { calculateMix, MODEL_NOTES, validatePigmentData, spectralHex, reflectanceFromKS } from './pigment-utils.js';
 /* Chroma — Color Mix Studio
  * Dependency-free. Palette and recipe state, a canvas blending animation,
  * 2D result view, and device-local session restore. */
@@ -134,6 +135,8 @@ import {
   /* ---------- State ---------- */
 
   const state = {
+    model: 'light',
+    pigmentData: null,
     step: 1,
     tab: 'studio',
     entries: [],
@@ -466,6 +469,13 @@ import {
       `).join('');
     }
 
+    if (state.model === 'measured') {
+      list.querySelectorAll('.ingredient strong').forEach((label, i) => {
+        const p = state.pigmentData.pigments.find(p => p.id === state.entries[i].pigmentId);
+        label.textContent = p.name;
+        label.title = `${p.material} · ${p.source} · ${p.license}`;
+      });
+    }
     renderComposition();
   }
 
@@ -491,7 +501,13 @@ import {
 
   function renderComposition() {
     const total = totalWeight(state.entries);
-    const live = blend(state.entries);
+    renderModel();
+    if (state.model === 'measured') {
+      document.querySelectorAll('#recipe [data-range]').forEach((input, i) => {
+        input.setAttribute('aria-label', state.pigmentData.pigments.find(p => p.id === state.entries[i].pigmentId)?.name || 'Pigment parts');
+      });
+    }
+    const live = calculateMix(state.entries, state.model, state.pigmentData);
 
     $('liveColor').style.background = live;
     $('liveHex').textContent =
@@ -574,7 +590,15 @@ import {
     $('clear').disabled = !state.saved.length;
   }
 
+  function renderModel() {
+    $('mixModel').value = state.model;
+    $('modelNote').textContent = MODEL_NOTES[state.model];
+    $('resultModel').textContent = MODEL_NOTES[state.model];
+    $('measuredOption').disabled = !state.pigmentData;
+  }
+
   function renderResult() {
+    renderModel();
     const rgb = toRgb(state.result);
     const preview = $('preview');
 
@@ -591,6 +615,12 @@ import {
   /* ---------- Recipe actions ---------- */
 
   function addColor(hex) {
+    if (state.model === 'measured') {
+      state.model = 'light';
+      state.entries = [];
+      recipeChanged();
+      renderModel();
+    }
     const color = hex.toUpperCase();
 
     const existing = state.entries.findIndex(
@@ -716,6 +746,7 @@ import {
   }
 
   function openSaved(hex) {
+    if (state.model === 'measured') state.model = 'light';
     state.entries = [{ hex, weight: 100 }];
     state.result = hex;
     state.mixed = true;
@@ -1030,7 +1061,7 @@ import {
     busy = true;
     $('progress').inert = true;
 
-    const mixed = blend(state.entries);
+    const mixed = calculateMix(state.entries, state.model, state.pigmentData);
     const stopMixSound = startMixSound(mixed);
 
     showMixing(true);
@@ -1066,7 +1097,9 @@ import {
 
   function persist() {
     const ok = storage.write(SESSION_KEY, {
-      version: 2,
+      version: 3,
+      model: state.model,
+      pigmentData: state.pigmentData,
       step: state.step,
       tab: state.tab,
       entries: state.entries,
@@ -1094,24 +1127,32 @@ import {
 
     if (
       !s
-      || ![1, 2].includes(s.version)
+      || ![1, 2, 3].includes(s.version)
       || !isValidEntries(s.entries)
     ) return false;
 
     const entries = s.entries.map(e => ({
       hex: e.hex.toUpperCase(),
-      weight: e.weight
+      weight: e.weight,
+      ...(typeof e.pigmentId === 'string' ? { pigmentId: e.pigmentId } : {})
     }));
+    const model = s.version === 3 && Object.hasOwn(MODEL_NOTES, s.model) ? s.model : 'light';
+    try {
+      if (s.pigmentData) validatePigmentData(s.pigmentData);
+      if (model === 'measured') calculateMix(entries, model, s.pigmentData);
+    } catch { return false; }
+    state.model = model;
+    state.pigmentData = s.pigmentData || null;
 
     const hexes = entries.map(e => e.hex);
 
-    if (new Set(hexes).size !== hexes.length) {
+    if (state.model !== 'measured' && new Set(hexes).size !== hexes.length) {
       return false;
     }
 
     state.entries = entries;
 
-    state.result = entries.length ? blend(entries) : NEUTRAL_RESULT;
+    state.result = entries.length ? calculateMix(entries, state.model, state.pigmentData) : NEUTRAL_RESULT;
 
     state.mixed = s.mixed === true && entries.length > 0;
     state.dirty = state.mixed && s.dirty === true;
@@ -1193,6 +1234,44 @@ import {
     });
 
     $('recipe').addEventListener('change', persist);
+
+    $('mixModel').addEventListener('change', () => {
+      if (busy) return;
+      const next = $('mixModel').value;
+      if (next === 'measured') {
+        state.entries = state.pigmentData.pigments.map(p => ({
+          hex: spectralHex(p.K.map((k, i) => reflectanceFromKS(k / p.S[i]))),
+          weight: START_WEIGHT,
+          pigmentId: p.id
+        }));
+      } else if (state.model === 'measured') {
+        state.entries = [];
+        state.mixed = false;
+        state.result = NEUTRAL_RESULT;
+      }
+      state.model = next;
+      recipeChanged();
+      renderAll();
+      renderModel();
+      persist();
+    });
+
+    $('pigmentImport').addEventListener('change', async event => {
+      const file = event.target.files[0];
+      if (!file) return;
+      try {
+        if (file.size > 100000) throw new Error('Use a dataset smaller than 100 KB.');
+        const data = validatePigmentData(JSON.parse(await file.text()));
+        // Verify every individual spectrum can be evaluated before accepting it.
+        for (const p of data.pigments) calculateMix([{ pigmentId: p.id, weight: 1 }], 'measured', data);
+        state.pigmentData = data;
+        $('measuredOption').disabled = false;
+        $('mixModel').value = 'measured';
+        $('mixModel').dispatchEvent(new Event('change'));
+        toast('Imported pigment calibration. Source claims have not been independently verified.');
+      } catch (error) { toast(error.message); }
+      event.target.value = '';
+    });
 
     $('saved').addEventListener('click', e => {
       const btn = e.target.closest('[data-hex]');
@@ -1292,10 +1371,10 @@ import {
           rgb: toRgb(state.result),
           ingredients: state.entries,
           shares: shares(state.entries),
-          mixing: 'Weighted linear-light sRGB average',
-          modelVersion: 2,
-          colorSpace: 'srgb-linear',
-          limitation: 'Digital light mixture; does not predict physical paint.',
+          mixing: state.model,
+          modelVersion: 3,
+          description: MODEL_NOTES[state.model],
+          pigmentData: state.model === 'measured' ? state.pigmentData : null,
           exactShares: state.entries.map(entry => entry.weight / totalWeight(state.entries))
         };
 

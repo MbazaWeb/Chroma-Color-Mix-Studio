@@ -77,7 +77,19 @@
             <h2><span class="step">02</span>Adjust your mix</h2>
             <button class="text-button" id="equal">Equal parts ↔</button>
           </div>
-          <p>Digital light mix · linear-light sRGB. Parts control each color’s share of the total. This does not predict physical paint.</p>
+          <label for="mixModel">Mixing model</label>
+          <select id="mixModel">
+            <option value="light">Digital light</option>
+            <option value="paint">Paint simulation (estimated spectra)</option>
+            <option value="measured" id="measuredOption" disabled>Measured pigments (import required)</option>
+          </select>
+          <p id="modelNote">Digital light · weighted linear-light sRGB.</p>
+          <details>
+            <summary>Use measured pigment data</summary>
+            <p>Import compatible absorption (K) and scattering (S) spectra. This replaces your recipe with the imported pigments. Custom HEX colors cannot be mixed in measured mode.</p>
+            <label>Import calibration JSON <input id="pigmentImport" type="file" accept=".json,application/json"></label>
+            <p>Required: 38 samples from 380–750 nm, volume basis, material, source and license. Imported measurements are user supplied and not independently verified. <a href="/pigment-data-format.md" target="_blank" rel="noopener">Data format and sources</a> · <a href="/pigment-data.schema.json" download>Download JSON schema</a></p>
+          </details>
           <div id="recipe" class="recipe"></div>
           <div class="live-blend"><span>Live blend preview</span><i id="liveColor"></i><b id="liveHex"></b></div>
           <div id="composition" class="composition" aria-label="Recipe proportions"></div>
@@ -106,7 +118,7 @@
             <div class="view view-2d" id="view2d">
             </div>
           </div>
-          <p>Calculated digital mix · linear-light sRGB. HEX and RGB are rounded to 8-bit sRGB. The animation illustrates the mix.</p>
+          <p id="resultModel"></p><p>HEX and RGB are rounded to 8-bit sRGB. The animation illustrates the mix.</p>
           <div class="codes">
             <button class="code" id="hexCopy"><small>HEX <span class="copy">⧉</span></small><b id="hex">#B7B59C</b></button>
             <button class="code" id="rgbCopy"><small>RGB <span class="copy">⧉</span></small><b id="rgb">183, 181, 156</b></button>

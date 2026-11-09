@@ -46,3 +46,16 @@ Live preview, completed result, and export use the same calculation. Exports
 include the model and exact fractional shares alongside rounded display shares.
 Restored recipes are recalculated, including sessions from the earlier encoded-RGB
 model. Saved swatches retain their original HEX values as standalone colors.
+
+
+## Paint and measured-data modes
+
+The mixing selector now offers digital light, an explicitly estimated paint
+simulation (Spectral.js 3.0.0, MIT), and imported measured K/S coefficients.
+See [data format, provenance and limitations](public/pigment-data-format.md).
+The light model remains the default and existing recipes retain that model.
+Measured mode requires a compatible calibration; no fabricated measurements or
+restricted datasets are bundled. Changing from measured to another model clears
+the measured recipe. Source and license fields travel with exported recipes.
+Paint simulation uses Spectral.js artistic influence weighting; it is not a mass
+or volume formulation tool. The measured model uses relative volume fractions.
