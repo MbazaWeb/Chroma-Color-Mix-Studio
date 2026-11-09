@@ -1527,7 +1527,7 @@ dialog .text-button {
 #recipeView details { margin: 16px 0; overflow-wrap: anywhere; }
 #recipeView summary { cursor: pointer; font-weight: 600; }
 #pigmentImport { display: block; max-width: 100%; margin: 10px 0; }
-#modelNote, #resultModel { line-height: 1.6; overflow-wrap: anywhere; }
+#modelNote { line-height: 1.6; overflow-wrap: anywhere; }
 
 /* Image color picker */
 .image-picker { margin: 0 0 22px; padding: 18px; border: 1px dashed var(--glass-edge); border-radius: var(--radius-lg); background: var(--glass-strong); }

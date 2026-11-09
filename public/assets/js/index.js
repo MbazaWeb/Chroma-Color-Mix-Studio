@@ -595,7 +595,6 @@ import {
   function renderModel() {
     $('mixModel').value = state.model;
     $('modelNote').textContent = MODEL_NOTES[state.model];
-    $('resultModel').textContent = MODEL_NOTES[state.model];
     $('measuredOption').disabled = !state.pigmentData;
   }
 
