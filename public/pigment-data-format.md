@@ -4,6 +4,9 @@ Chroma supports imported two-constant Kubelka–Munk data. No laboratory-measure
 pigment library is bundled. Spectral.js paint simulation reconstructs spectra from
 RGB and must not be described as measured data.
 
+Machine-readable schema: [pigment-data.schema.json](/pigment-data.schema.json).
+Pigment IDs must also be unique; runtime validation enforces this.
+
 ## JSON schema
 
 - `version`: 1

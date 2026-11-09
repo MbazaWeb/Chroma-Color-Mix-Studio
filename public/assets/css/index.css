@@ -1511,3 +1511,20 @@ dialog .text-button {
     transform: scaleX(1);
   }
 }
+/* Mixing model controls and calibration help */
+#mixModel {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 8px 0 12px;
+  padding: 12px;
+  border: 1px solid #c9cec3;
+  border-radius: 12px;
+  background: #fff;
+  color: #293226;
+  font: inherit;
+}
+#recipeView details { margin: 16px 0; overflow-wrap: anywhere; }
+#recipeView summary { cursor: pointer; font-weight: 600; }
+#pigmentImport { display: block; max-width: 100%; margin: 10px 0; }
+#modelNote, #resultModel { line-height: 1.6; overflow-wrap: anywhere; }

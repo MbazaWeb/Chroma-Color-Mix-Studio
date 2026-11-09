@@ -1,4 +1,4 @@
-const CACHE_NAME = 'chroma-shell-v5';
+const CACHE_NAME = 'chroma-shell-v6';
 const APP_FILES = [
   '/',
   '/index.html',
@@ -8,6 +8,8 @@ const APP_FILES = [
   '/assets/js/pigment-utils.js',
   '/assets/js/vendor/spectral.js',
   '/pigment-data-format.md',
+  '/pigment-data.schema.json',
+  '/assets/js/vendor/spectral.LICENSE.txt',
   '/manifest.webmanifest',
   '/assets/icons/favicon.png',
   '/assets/icons/icon-192.png',
