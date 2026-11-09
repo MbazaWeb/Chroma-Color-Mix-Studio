@@ -1548,10 +1548,3 @@ dialog .text-button {
 .image-readout .secondary { margin-left: auto; }
 .image-readout .secondary:disabled { opacity: 0.5; cursor: not-allowed; }
 #imageNote { display: block; min-height: 1em; margin-top: 8px; color: var(--muted); font-size: 11px; }
-.reference-library { margin: 18px 0; padding: 16px; border: 1px solid var(--glass-edge); border-radius: 16px; }
-.reference-library summary { cursor: pointer; font-weight: 600; }
-#shadeSearch { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid var(--glass-edge); border-radius: 12px; }
-.shade-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; max-height: 360px; overflow: auto; }
-.shade-card { padding: 10px; border: 1px solid var(--glass-edge); border-radius: 12px; background: var(--sheet); text-align: left; }
-.shade-card i { display: block; height: 48px; margin-bottom: 6px; border: 1px solid var(--glass-edge); border-radius: 8px; }
-.shade-card span, .shade-card small { display: block; overflow-wrap: anywhere; }

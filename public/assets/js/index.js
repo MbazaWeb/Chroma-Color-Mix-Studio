@@ -1,5 +1,4 @@
 import { initImagePicker } from './image-picker.js';
-import { initReferenceLibrary } from './reference-library.js';
 import { calculateMix, MODEL_NOTES, validatePigmentData, spectralHex, reflectanceFromKS } from './pigment-utils.js';
 /* Chroma — Color Mix Studio
  * Dependency-free. Palette and recipe state, a canvas blending animation,
@@ -1361,7 +1360,6 @@ import {
       addColor(hex);
     };
     initImagePicker({ onUse: useSample, toast });
-    initReferenceLibrary({ onUse: useSample });
 
     const actions = {
       next: () => goTo(2),

@@ -25,6 +25,14 @@ test('application module imports resolve to shipped local modules', async () => 
   await visit(new URL('assets/js/index.js', root));
 });
 
+test('pick-colors step keeps photo sampling without the removed reference sections', async () => {
+  const html = await readFile(new URL('index.html', root), 'utf8');
+  const app = await readFile(new URL('assets/js/index.js', root), 'utf8');
+  assert.match(html, /id="imageInput"/);
+  assert.doesNotMatch(html, /class="reference-library"|Shade reference library|Learn about paint mixing/);
+  assert.doesNotMatch(app, /reference-library\.js|initReferenceLibrary/);
+});
+
 test('calibration schema and third-party license are shipped', async () => {
   const schema = JSON.parse(await readFile(new URL('pigment-data.schema.json', root), 'utf8'));
   assert.equal(schema.properties.pigments.items.properties.wavelengths.const.length, 38);
