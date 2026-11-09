@@ -209,6 +209,24 @@ header {
   letter-spacing: 0;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.plan-badge {
+  padding: 6px 8px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.plan-badge:hover { color: var(--accent-hover); }
+
 .pill {
   min-height: 44px;
   padding: 10px 18px;
@@ -626,6 +644,39 @@ main {
   margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid var(--glass-edge);
+}
+
+.selection-plan {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+}
+
+.selection-plan > span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.free-limit-notice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin: 14px 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--glass-strong);
+  color: var(--muted);
+  font-size: 13px;
+}
+.free-limit-notice[hidden] { display: none; }
+
+.upgrade-link {
+  color: var(--accent-hover);
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .step-actions > span {
@@ -1158,6 +1209,19 @@ dialog .text-button {
   margin-top: 4px;
 }
 
+.pro-dialog { position: relative; }
+.pro-dialog h2 { margin: 12px 38px 8px 0; font-size: 26px; letter-spacing: -0.8px; }
+.pro-dialog > p { line-height: 1.55; }
+.dialog-close { position: absolute; top: 14px; right: 16px; width: 36px; height: 36px; border: 0; border-radius: 50%; background: var(--glass-strong); color: var(--ink); font-size: 24px; cursor: pointer; }
+.billing-periods { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 20px 0 12px; padding: 4px; border-radius: 14px; background: var(--glass-strong); }
+.billing-periods button { min-height: 40px; border: 0; border-radius: 11px; background: transparent; color: var(--muted); font: inherit; font-weight: 700; cursor: pointer; }
+.billing-periods button[aria-pressed="true"] { background: #fff; color: var(--ink); box-shadow: 0 1px 5px #17201418; }
+.pro-price { display: flex; flex-direction: column; gap: 3px; margin: 16px 0; }
+.pro-price strong { font-size: 28px; letter-spacing: -0.7px; }
+.pro-price span, .billing-status { color: var(--muted); font-size: 12px; }
+.billing-status { padding: 12px; border-radius: 12px; background: #f3f5ef; }
+.pro-dialog > .primary:disabled { opacity: 0.55; cursor: not-allowed; }
+
 /* Hover effects for mouse devices */
 
 @media (hover: hover) {
@@ -1238,6 +1302,9 @@ dialog .text-button {
     gap: 8px;
     font-size: 23px;
   }
+
+  .header-actions { gap: 8px; }
+  .plan-badge { max-width: 84px; font-size: 9px; text-align: right; }
 
   .pill {
     max-width: 53%;
@@ -1328,6 +1395,8 @@ dialog .text-button {
     align-items: stretch;
     gap: 12px;
   }
+
+  .selection-plan { justify-content: center; }
 
   .step-actions > span {
     flex: none;
@@ -1535,6 +1604,10 @@ dialog .text-button {
 .image-picker h3 { margin: 0; font-size: 15px; }
 .image-picker-head small, .image-empty { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
 .image-empty { margin: 10px 0 0; }
+.image-upload-button:has(input:disabled) { opacity: 0.55; cursor: not-allowed; }
+.image-upload-button input:disabled { cursor: not-allowed; }
+.pro-lock-note { margin: 10px 0 0; color: var(--accent-hover); font-size: 11px; font-weight: 700; }
+.pro-lock-note[hidden] { display: none; }
 .image-upload-button { position: relative; display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border-radius: 999px; background: var(--accent); color: var(--on-accent); font-size: 13px; font-weight: 600; cursor: pointer; }
 .image-upload-button:focus-within, #imageCanvas:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 .image-upload-button input { position: absolute; inset: 0; width: 100%; opacity: 0; cursor: pointer; }

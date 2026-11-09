@@ -5,6 +5,6 @@
   "type": "module",
   "scripts": {
     "test": "node --test",
-    "check": "node --check public/assets/js/index.js && node --check public/assets/js/color-utils.js && node --check public/sw.js && node --check public/assets/js/pigment-utils.js && node --check public/assets/js/recipe-pdf.js && node --check public/assets/js/image-picker.js && node --check public/assets/js/reference-library.js && node --check public/assets/js/vendor/spectral.js"
+    "check": "node --check public/assets/js/index.js && node --check public/assets/js/color-utils.js && node --check public/sw.js && node --check public/assets/js/pigment-utils.js && node --check public/assets/js/recipe-pdf.js && node --check public/assets/js/plans.js && node --check public/assets/js/image-picker.js && node --check public/assets/js/reference-library.js && node --check public/assets/js/vendor/spectral.js"
   }
 }

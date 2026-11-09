@@ -1,6 +1,7 @@
 import { initImagePicker } from './image-picker.js';
 import { calculateMix, MODEL_NOTES, validatePigmentData, spectralHex, reflectanceFromKS } from './pigment-utils.js';
 import { createRecipePdf } from './recipe-pdf.js';
+import { colorLimitFor, formatTzs, PLANS } from './plans.js';
 /* Chroma — Color Mix Studio
  * Dependency-free. Palette and recipe state, a canvas blending animation,
  * 2D result view, and device-local session restore. */
@@ -22,6 +23,7 @@ import {
   /* ---------- Configuration ---------- */
 
   const MAX_COLORS = 8;
+  const FREE_COLOR_LIMIT = colorLimitFor('free');
   const MAX_SAVED = 12;
   const START_WEIGHT = 50;
   const DEFAULT_RESULT = '#B7B59C';
@@ -120,6 +122,8 @@ import {
   };
 
   let soundEnabled = storage.read(SOUND_KEY) !== false;
+  const plan = 'free';
+  let selectedProPeriod = 'monthly';
   let audioContext = null;
   let masterGain = null;
 
@@ -155,6 +159,9 @@ import {
     step === 1
     || (step === 2 && state.entries.length > 0)
     || (step === 3 && state.mixed && !state.dirty);
+
+  const isOverFreeLimit = () =>
+    plan === 'free' && state.entries.length > FREE_COLOR_LIMIT;
 
   const recipeChanged = () => {
     if (state.mixed) state.dirty = true;
@@ -382,7 +389,7 @@ import {
     renderSelection();
     renderProgress();
 
-    $('mix').disabled = !state.entries.length;
+    $('mix').disabled = !state.entries.length || isOverFreeLimit();
     $('equal').disabled = !state.entries.length;
   }
 
@@ -510,6 +517,10 @@ import {
       });
     }
     const live = calculateMix(state.entries, state.model, state.pigmentData);
+    $('freeLimitNotice').hidden = !isOverFreeLimit();
+    $('freeLimitText').textContent = isOverFreeLimit()
+      ? `Free allows ${FREE_COLOR_LIMIT} colors. Remove ${state.entries.length - FREE_COLOR_LIMIT} to continue, or upgrade to Pro.`
+      : '';
 
     $('liveColor').style.background = live;
     $('liveHex').textContent =
@@ -527,12 +538,15 @@ import {
 
   function renderSelection() {
     const n = state.entries.length;
+    const overLimit = isOverFreeLimit();
 
-    $('selectionCount').textContent = n
-      ? `${n} of ${MAX_COLORS} colors selected`
-      : 'Choose a color to start';
+    $('selectionCount').textContent = overLimit
+      ? `${n} colors selected · remove ${n - FREE_COLOR_LIMIT} to continue`
+      : n
+        ? `${n} of ${FREE_COLOR_LIMIT} free colors selected`
+        : 'Choose a color to start';
 
-    $('next').disabled = !n;
+    $('next').disabled = !n || overLimit;
 
     $('selectionTray').innerHTML =
       state.entries.map((e, i) => `
@@ -595,7 +609,60 @@ import {
   function renderModel() {
     $('mixModel').value = state.model;
     $('modelNote').textContent = MODEL_NOTES[state.model];
-    $('measuredOption').disabled = !state.pigmentData;
+    $('measuredOption').disabled = plan !== 'pro' || !state.pigmentData;
+  }
+
+  function renderPlan() {
+    const proEnabled = plan === 'pro';
+    if (!proEnabled && state.model !== 'light') {
+      state.model = 'light';
+      state.pigmentData = null;
+      state.entries = state.entries.map(({ hex, weight }) => ({ hex, weight }));
+      state.result = state.entries.length
+        ? calculateMix(state.entries, 'light')
+        : NEUTRAL_RESULT;
+      if (state.mixed) {
+        state.dirty = true;
+        if (state.step === 3) state.step = 2;
+      }
+    }
+    if (!proEnabled && isOverFreeLimit()) {
+      state.dirty = state.mixed || state.dirty;
+      if (state.step === 3) state.step = 2;
+    }
+
+    $('imageInput').disabled = !proEnabled;
+    $('imageProNotice').hidden = proEnabled;
+    $('imageEmpty').textContent = proEnabled
+      ? 'Upload a JPG, PNG, WebP or GIF to sample decoded sRGB pixels. Images stay on this device. Photo colors are not measured paint data.'
+      : 'Photo color sampling is a Pro tool. Photos remain on this device and are not measured paint data.';
+    $('mixModel').querySelector('[value="paint"]').disabled = !proEnabled;
+    $('pigmentImport').disabled = !proEnabled;
+    $('paintProNotice').hidden = proEnabled;
+    $('export').disabled = !proEnabled;
+    $('export').textContent = proEnabled
+      ? 'Download recipe PDF ↓'
+      : 'Recipe PDF · Pro';
+    $('planBadge').textContent = proEnabled ? 'Pro' : 'Free plan · 3 colors';
+    renderModel();
+  }
+
+  function openProDialog() {
+    updateProPrice();
+    $('proDialog').showModal();
+  }
+
+  function updateProPrice() {
+    const yearly = selectedProPeriod === 'yearly';
+    const amount = yearly
+      ? PLANS.pro.yearlyPriceTzs
+      : PLANS.pro.monthlyPriceTzs;
+    const period = yearly ? 'year' : 'month';
+
+    $('monthlyPlan').setAttribute('aria-pressed', String(!yearly));
+    $('yearlyPlan').setAttribute('aria-pressed', String(yearly));
+    $('proPrice').textContent = formatTzs(amount);
+    $('proPeriod').textContent = `per ${period}, auto-renewing`;
   }
 
   function renderResult() {
@@ -633,10 +700,13 @@ import {
       return;
     }
 
-    if (state.entries.length >= MAX_COLORS) {
-      return toast(
-        `Keep your recipe to ${MAX_COLORS} colors or fewer`
-      );
+    const colorLimit = colorLimitFor(plan);
+    if (state.entries.length >= colorLimit) {
+      if (plan === 'free') {
+        openProDialog();
+        return toast(`Free includes up to ${FREE_COLOR_LIMIT} colors. Upgrade to Pro for up to ${MAX_COLORS}.`);
+      }
+      return toast(`Keep your recipe to ${MAX_COLORS} colors or fewer`);
     }
 
     state.entries.push({
@@ -1058,6 +1128,11 @@ import {
 
   async function blendColors() {
     if (busy || !state.entries.length) return;
+    if (isOverFreeLimit()) {
+      openProDialog();
+      toast(`Free includes up to ${FREE_COLOR_LIMIT} colors. Remove colors or upgrade to Pro.`);
+      return;
+    }
 
     busy = true;
     $('progress').inert = true;
@@ -1239,6 +1314,11 @@ import {
     $('mixModel').addEventListener('change', () => {
       if (busy) return;
       const next = $('mixModel').value;
+      if (next !== 'light' && plan !== 'pro') {
+        $('mixModel').value = state.model;
+        openProDialog();
+        return;
+      }
       if (next === 'measured') {
         state.entries = state.pigmentData.pigments.map(p => ({
           hex: spectralHex(p.K.map((k, i) => reflectanceFromKS(k / p.S[i]))),
@@ -1260,6 +1340,11 @@ import {
     $('pigmentImport').addEventListener('change', async event => {
       const file = event.target.files[0];
       if (!file) return;
+      if (plan !== 'pro') {
+        event.target.value = '';
+        openProDialog();
+        return;
+      }
       try {
         if (file.size > 100000) throw new Error('Use a dataset smaller than 100 KB.');
         const data = validatePigmentData(JSON.parse(await file.text()));
@@ -1377,6 +1462,10 @@ import {
       ),
 
       export: () => {
+        if (plan !== 'pro') {
+          openProDialog();
+          return;
+        }
         const pdf = createRecipePdf({
           result: state.result,
           entries: state.entries,
@@ -1406,7 +1495,19 @@ import {
       },
 
       save: saveCurrent,
-      clear: clearSaved
+      clear: clearSaved,
+      upgrade: openProDialog,
+      planBadge: openProDialog,
+      upgradeMix: openProDialog,
+      closeProDialog: () => $('proDialog').close(),
+      monthlyPlan: () => {
+        selectedProPeriod = 'monthly';
+        updateProPrice();
+      },
+      yearlyPlan: () => {
+        selectedProPeriod = 'yearly';
+        updateProPrice();
+      }
     };
 
     Object.entries(actions).forEach(([id, fn]) => {
@@ -1534,6 +1635,7 @@ import {
 
     setupInstallPrompt();
     registerServiceWorker();
+    renderPlan();
     updateSoundToggle();
     bindEvents();
     renderTabs();

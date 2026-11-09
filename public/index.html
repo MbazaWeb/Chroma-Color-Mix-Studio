@@ -21,7 +21,10 @@
   <a class="skip-link" href="#main">Skip to studio</a>
   <header>
     <div class="brand"><span class="logo" aria-hidden="true"><i></i><i></i><i></i></span>chroma<span class="tag">/ color mix studio</span></div>
-    <button class="pill" id="soundToggle" type="button" aria-label="Mute color sounds" aria-pressed="true">Sound on</button>
+    <div class="header-actions">
+      <button class="plan-badge" id="planBadge" type="button">Free plan · 3 colors</button>
+      <button class="pill" id="soundToggle" type="button" aria-label="Mute color sounds" aria-pressed="true">Sound on</button>
+    </div>
   </header>
 
   <main id="main">
@@ -67,7 +70,8 @@
             <div><h3 id="imagePickerTitle">Pick from a photo</h3><small id="imageMeta"></small></div>
             <label class="image-upload-button">Upload image<input id="imageInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif" aria-label="Upload an image to sample"></label>
           </div>
-          <p id="imageEmpty" class="image-empty">Upload a JPG, PNG, WebP or GIF to sample decoded sRGB pixels. Images stay on this device. Photo colors are not measured paint data.</p>
+          <p id="imageProNotice" class="pro-lock-note">PRO · Unlock photo color sampling</p>
+          <p id="imageEmpty" class="image-empty">Photo color sampling is a Pro tool. Photos remain on this device and are not measured paint data.</p>
           <div id="imageStage" class="image-stage" hidden>
             <canvas id="imageCanvas" tabindex="0" aria-label="Uploaded image. Click or tap to select a pixel. Use arrow keys to move and Enter to select."></canvas>
             <div class="image-readout">
@@ -80,7 +84,10 @@
         </section>
         <div class="selection-tray" id="selectionTray"></div>
         <div class="step-actions">
-          <span id="selectionCount">Choose a color to start</span>
+          <div class="selection-plan">
+            <span id="selectionCount">Choose a color to start</span>
+            <button class="text-button upgrade-link" id="upgrade" type="button">Upgrade to Pro</button>
+          </div>
           <button class="primary" id="next">Continue to mixing →</button>
         </div>
       </section>
@@ -96,10 +103,11 @@
           <label for="mixModel">Mixing model</label>
           <select id="mixModel">
             <option value="light">Digital light</option>
-            <option value="paint">Paint simulation (estimated spectra)</option>
+            <option value="paint">Paint simulation · Pro</option>
             <option value="measured" id="measuredOption" disabled>Measured pigments (import required)</option>
           </select>
           <p id="modelNote">Digital light · weighted linear-light sRGB.</p>
+          <p id="paintProNotice" class="pro-lock-note">PRO · Unlock paint simulation and measured pigment tools</p>
           <details>
             <summary>Use measured pigment data</summary>
             <p>Import compatible absorption (K) and scattering (S) spectra. This replaces your recipe with the imported pigments. Custom HEX colors cannot be mixed in measured mode.</p>
@@ -109,6 +117,10 @@
           <div id="recipe" class="recipe"></div>
           <div class="live-blend"><span>Live blend preview</span><i id="liveColor"></i><b id="liveHex"></b></div>
           <div id="composition" class="composition" aria-label="Recipe proportions"></div>
+          <div class="free-limit-notice" id="freeLimitNotice" hidden>
+            <span id="freeLimitText" role="status"></span>
+            <button class="text-button upgrade-link" id="upgradeMix" type="button">Upgrade to Pro</button>
+          </div>
           <div class="actions">
             <button class="primary" id="mix">Mix my colors →</button>
             <button class="secondary" id="reset" aria-label="Reset mix">↺ Reset</button>
@@ -173,6 +185,20 @@
     <p id="installDescription">Add Chroma to your device for quick access and a focused, app-like experience.</p>
     <button class="primary" id="installApp">How to install</button>
     <button class="text-button" id="dismissInstall">Not now</button>
+  </dialog>
+
+  <dialog id="proDialog" class="pro-dialog" aria-labelledby="proTitle" aria-describedby="proDescription">
+    <button class="dialog-close" id="closeProDialog" type="button" aria-label="Close Pro plans">×</button>
+    <span class="eyebrow">CHROMA PRO</span>
+    <h2 id="proTitle">Make more room for color.</h2>
+    <p id="proDescription">Mix up to 8 colors and unlock photo sampling, paint tools, and recipe PDF downloads.</p>
+    <div class="billing-periods" aria-label="Choose a billing period">
+      <button id="monthlyPlan" type="button" aria-pressed="true">Monthly · TZS 9,900</button>
+      <button id="yearlyPlan" type="button" aria-pressed="false">Yearly · TZS 118,800</button>
+    </div>
+    <p class="pro-price"><strong id="proPrice">TZS 9,900</strong><span id="proPeriod">per month, auto-renewing</span></p>
+    <p class="billing-status" role="status">Subscriptions are not active yet. Selcom recurring billing is being confirmed; this screen will not charge you.</p>
+    <button class="primary" type="button" disabled>Checkout coming soon</button>
   </dialog>
 
   <script src="/assets/js/index.js" type="module"></script>

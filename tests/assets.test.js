@@ -33,6 +33,19 @@ test('pick-colors step keeps photo sampling without the removed reference sectio
   assert.doesNotMatch(app, /reference-library\.js|initReferenceLibrary/);
 });
 
+test('upgrade screen states prices and does not imply checkout is active', async () => {
+  const html = await readFile(new URL('index.html', root), 'utf8');
+  const app = await readFile(new URL('assets/js/index.js', root), 'utf8');
+  assert.match(html, /TZS 9,900/);
+  assert.match(html, /Subscriptions are not active yet/);
+  assert.match(html, /Checkout coming soon/);
+  assert.match(html, /118,800/);
+  assert.match(html, /id="freeLimitNotice"/);
+  assert.match(app, /state\.entries\.length > FREE_COLOR_LIMIT/);
+  assert.match(app, /\$\('mix'\)\.disabled = !state\.entries\.length \|\| isOverFreeLimit\(\)/);
+  assert.match(app, /state\.model = 'light'/);
+});
+
 test('calibration schema and third-party license are shipped', async () => {
   const schema = JSON.parse(await readFile(new URL('pigment-data.schema.json', root), 'utf8'));
   assert.equal(schema.properties.pigments.items.properties.wavelengths.const.length, 38);

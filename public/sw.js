@@ -1,4 +1,4 @@
-const CACHE_NAME = 'chroma-shell-v9';
+const CACHE_NAME = 'chroma-shell-v11';
 const APP_FILES = [
   '/',
   '/index.html',
@@ -7,6 +7,7 @@ const APP_FILES = [
   '/assets/js/color-utils.js',
   '/assets/js/pigment-utils.js',
   '/assets/js/recipe-pdf.js',
+  '/assets/js/plans.js',
   '/assets/js/image-picker.js',
   '/assets/js/vendor/spectral.js',
   '/pigment-data-format.md',

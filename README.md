@@ -14,6 +14,15 @@ The site includes a web app manifest and service worker for installability and o
 
 Color selections, mixing, and completed blends have generated sound effects. Use the **Sound on/off** control in the header to mute or enable them.
 
+## Plans and billing status
+
+The Free plan permits up to three colors. The Pro pricing screen lists TZS 9,900
+monthly and TZS 118,800 yearly, with auto-renewal terms, and describes the
+planned eight-color limit and Pro tools. Checkout is intentionally inactive:
+Selcom recurring billing and server-side accounts/entitlements must be
+implemented and verified before subscriptions can be purchased or auto-renewal
+can be claimed as active. The pricing screen does not charge users.
+
 ## Development
 
 - Run the built-in color utility tests with `npm test`.
