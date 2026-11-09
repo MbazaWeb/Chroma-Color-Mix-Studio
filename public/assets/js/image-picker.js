@@ -56,6 +56,7 @@ export function initImagePicker({ onUse, toast }) {
       if (!context) throw new Error('Image sampling is unavailable in this browser.');
       canvas.width = img.naturalWidth;
       canvas.height = img.naturalHeight;
+      canvas.style.maxWidth = `min(100%, ${420 * img.naturalWidth / img.naturalHeight}px)`;
       context.drawImage(img, 0, 0);
       selected = null;
       point = { x: 0, y: 0 };

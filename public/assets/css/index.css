@@ -1540,7 +1540,7 @@ dialog .text-button {
 .image-upload-button input { position: absolute; inset: 0; width: 100%; opacity: 0; cursor: pointer; }
 .image-stage[hidden] { display: none; }
 .image-stage { margin-top: 14px; }
-#imageCanvas { display: block; width: 100%; height: auto; max-height: 420px; object-fit: contain; border-radius: 14px; background: repeating-conic-gradient(#e9ece4 0% 25%, #ffffff 0% 50%) 50% / 16px 16px; cursor: crosshair; touch-action: pan-y; }
+#imageCanvas { display: block; width: 100%; height: auto; margin-inline: auto; object-fit: contain; border-radius: 14px; background: repeating-conic-gradient(#e9ece4 0% 25%, #ffffff 0% 50%) 50% / 16px 16px; cursor: crosshair; touch-action: pan-y; }
 .image-readout { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; margin-top: 12px; font-family: var(--mono); font-size: 13px; }
 .image-live, .image-selected { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); }
 .image-live i, .image-selected i { display: inline-block; width: 22px; height: 22px; border: 1px solid var(--glass-edge); border-radius: 50%; }
