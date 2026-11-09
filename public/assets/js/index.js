@@ -1066,7 +1066,7 @@ import {
 
   function persist() {
     const ok = storage.write(SESSION_KEY, {
-      version: 1,
+      version: 2,
       step: state.step,
       tab: state.tab,
       entries: state.entries,
@@ -1094,7 +1094,7 @@ import {
 
     if (
       !s
-      || s.version !== 1
+      || ![1, 2].includes(s.version)
       || !isValidEntries(s.entries)
     ) return false;
 
@@ -1111,11 +1111,9 @@ import {
 
     state.entries = entries;
 
-    state.result = isHex(s.result)
-      ? s.result.toUpperCase()
-      : DEFAULT_RESULT;
+    state.result = entries.length ? blend(entries) : NEUTRAL_RESULT;
 
-    state.mixed = s.mixed === true;
+    state.mixed = s.mixed === true && entries.length > 0;
     state.dirty = state.mixed && s.dirty === true;
 
     state.tab = TABS.includes(s.tab)
@@ -1294,7 +1292,11 @@ import {
           rgb: toRgb(state.result),
           ingredients: state.entries,
           shares: shares(state.entries),
-          mixing: 'Weighted RGB channel average'
+          mixing: 'Weighted linear-light sRGB average',
+          modelVersion: 2,
+          colorSpace: 'srgb-linear',
+          limitation: 'Digital light mixture; does not predict physical paint.',
+          exactShares: state.entries.map(entry => entry.weight / totalWeight(state.entries))
         };
 
         const url = URL.createObjectURL(

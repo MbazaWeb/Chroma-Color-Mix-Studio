@@ -27,3 +27,22 @@ Color selections, mixing, and completed blends have generated sound effects. Use
 - `tests/` — Node.js built-in tests for color and mix utilities.
 - `.github/workflows/` — continuous integration.
 - Root configuration and deployment documentation stay alongside `vercel.json`.
+
+## Mixing model
+
+Chroma computes a normalized weighted average in **linear-light sRGB**.
+Each HEX channel is decoded using the standard sRGB transfer function, averaged
+by parts / total parts, then encoded back to sRGB and rounded once to 8-bit HEX.
+Reference: https://www.w3.org/TR/css-color-4/#color-conversion-code
+
+Equal black and white produces `#BCBCBC`; equal red and green produces `#BCBC00`.
+This models a digital light mixture at fixed total intensity, not stacked lamps
+whose total brightness increases. HEX alone does not specify pigment absorption,
+scattering, concentration, substrate, or illumination, so physical paint matching
+is not claimed. There are no hard-coded pair outcomes or random result colors.
+Randomness is confined to the decorative animation. Sounds are artistic mappings.
+
+Live preview, completed result, and export use the same calculation. Exports
+include the model and exact fractional shares alongside rounded display shares.
+Restored recipes are recalculated, including sessions from the earlier encoded-RGB
+model. Saved swatches retain their original HEX values as standalone colors.
