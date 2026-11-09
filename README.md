@@ -42,8 +42,11 @@ scattering, concentration, substrate, or illumination, so physical paint matchin
 is not claimed. There are no hard-coded pair outcomes or random result colors.
 Randomness is confined to the decorative animation. Sounds are artistic mappings.
 
-Live preview, completed result, and export use the same calculation. Exports
-include the model and exact fractional shares alongside rounded display shares.
+Live preview, completed result, and PDF export use the same calculation. The
+recipe PDF includes the final swatch, HEX and RGB codes, a digital hue-family
+label, and every ingredient's HEX, relative parts, and rounded percentage share.
+It is a presentation summary, not a physical paint measurement or calibration
+provenance file.
 Restored recipes are recalculated, including sessions from the earlier encoded-RGB
 model. Saved swatches retain their original HEX values as standalone colors.
 
@@ -56,7 +59,7 @@ See [data format, provenance and limitations](public/pigment-data-format.md).
 The light model remains the default and existing recipes retain that model.
 Measured mode requires a compatible calibration; no fabricated measurements or
 restricted datasets are bundled. Changing from measured to another model clears
-the measured recipe. Source and license fields travel with exported recipes.
+the measured recipe.
 Paint simulation uses Spectral.js artistic influence weighting; it is not a mass
 or volume formulation tool. The measured model uses relative volume fractions.
 

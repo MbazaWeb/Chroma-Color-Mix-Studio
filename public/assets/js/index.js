@@ -1,5 +1,6 @@
 import { initImagePicker } from './image-picker.js';
 import { calculateMix, MODEL_NOTES, validatePigmentData, spectralHex, reflectanceFromKS } from './pigment-utils.js';
+import { createRecipePdf } from './recipe-pdf.js';
 /* Chroma — Color Mix Studio
  * Dependency-free. Palette and recipe state, a canvas blending animation,
  * 2D result view, and device-local session restore. */
@@ -1377,31 +1378,23 @@ import {
       ),
 
       export: () => {
-        const payload = {
-          name: 'Chroma color recipe',
-          hex: state.result,
-          rgb: toRgb(state.result),
-          ingredients: state.entries,
-          shares: shares(state.entries),
-          mixing: state.model,
-          modelVersion: 3,
-          description: MODEL_NOTES[state.model],
-          pigmentData: state.model === 'measured' ? state.pigmentData : null,
-          exactShares: state.entries.map(entry => entry.weight / totalWeight(state.entries))
-        };
-
+        const pdf = createRecipePdf({
+          result: state.result,
+          entries: state.entries,
+          model: state.model,
+          pigments: state.model === 'measured'
+            ? state.pigmentData?.pigments || []
+            : []
+        });
         const url = URL.createObjectURL(
-          new Blob(
-            [JSON.stringify(payload, null, 2)],
-            { type: 'application/json' }
-          )
+          new Blob([pdf], { type: 'application/pdf' })
         );
 
         const link = document.createElement('a');
 
         link.href = url;
         link.download =
-          `chroma-${state.result.slice(1)}.json`;
+          `chroma-recipe-${state.result.slice(1)}.pdf`;
 
         document.body.append(link);
         link.click();
