@@ -1,0 +1,323 @@
+{
+  "source": "asian-paints-shade-card.pdf",
+  "publisher": "AapkaPainter",
+  "method": "PDF vector fill RGB values rounded to 8-bit; matched spatially to adjacent name and code",
+  "accuracy": "Approximate PDF screen swatches; not official measured paint values or K/S data",
+  "shades": [
+    {
+      "name": "Morning Glory",
+      "code": "0765",
+      "hex": "#F0EFE8",
+      "page": 3,
+      "category": "CREAMY WHITES"
+    },
+    {
+      "name": "Cream Pie",
+      "code": "L152",
+      "hex": "#F8F6F4",
+      "page": 3,
+      "category": "CREAMY WHITES"
+    },
+    {
+      "name": "Love Song",
+      "code": "L144",
+      "hex": "#F4F0E5",
+      "page": 3,
+      "category": "CREAMY WHITES"
+    },
+    {
+      "name": "Sugared Nut",
+      "code": "L126",
+      "hex": "#F8F1DF",
+      "page": 3,
+      "category": "CREAMY WHITES"
+    },
+    {
+      "name": "Pressed Linen",
+      "code": "L150",
+      "hex": "#F6F0E3",
+      "page": 3,
+      "category": "CREAMY WHITES"
+    },
+    {
+      "name": "Pure Ivory",
+      "code": "L124",
+      "hex": "#F3EEDD",
+      "page": 3,
+      "category": "CREAMY WHITES"
+    },
+    {
+      "name": "Pearl Star",
+      "code": "L103",
+      "hex": "#F3EDE0",
+      "page": 3,
+      "category": "CREAMY WHITES"
+    },
+    {
+      "name": "Egg Shell",
+      "code": "L149",
+      "hex": "#F0EADC",
+      "page": 3,
+      "category": "CREAMY WHITES"
+    },
+    {
+      "name": "Sonnet",
+      "code": "L146",
+      "hex": "#F7F1E7",
+      "page": 3,
+      "category": "CREAMY WHITES"
+    },
+    {
+      "name": "Macadamia",
+      "code": "5184",
+      "hex": "#F0E5D6",
+      "page": 4,
+      "category": "SOFT NEUTRALS"
+    },
+    {
+      "name": "Beige-N",
+      "code": "0302",
+      "hex": "#C4B0A0",
+      "page": 4,
+      "category": "SOFT NEUTRALS"
+    },
+    {
+      "name": "Light Coffee",
+      "code": "0470",
+      "hex": "#BEA694",
+      "page": 4,
+      "category": "SOFT NEUTRALS"
+    },
+    {
+      "name": "Cold Coffee",
+      "code": "L129",
+      "hex": "#E6D6BE",
+      "page": 4,
+      "category": "SOFT NEUTRALS"
+    },
+    {
+      "name": "Raw Jute",
+      "code": "L151",
+      "hex": "#F4ECDE",
+      "page": 4,
+      "category": "SOFT NEUTRALS"
+    },
+    {
+      "name": "Enlighten-N",
+      "code": "4148",
+      "hex": "#E0D8CB",
+      "page": 4,
+      "category": "SOFT NEUTRALS"
+    },
+    {
+      "name": "Cream",
+      "code": "0307",
+      "hex": "#F1E3C8",
+      "page": 4,
+      "category": "SOFT NEUTRALS"
+    },
+    {
+      "name": "Old Lace",
+      "code": "0950",
+      "hex": "#EFDFCB",
+      "page": 4,
+      "category": "SOFT NEUTRALS"
+    },
+    {
+      "name": "Hazel Nut",
+      "code": "8569",
+      "hex": "#D1AF96",
+      "page": 4,
+      "category": "SOFT NEUTRALS"
+    },
+    {
+      "name": "Mint Essence",
+      "code": "L117",
+      "hex": "#E8EEE1",
+      "page": 5,
+      "category": "GREENS & MUTED BLUES"
+    },
+    {
+      "name": "Seagull Point",
+      "code": "L113",
+      "hex": "#E8EEE4",
+      "page": 5,
+      "category": "GREENS & MUTED BLUES"
+    },
+    {
+      "name": "Spring Breeze",
+      "code": "7723",
+      "hex": "#E8E7CC",
+      "page": 5,
+      "category": "GREENS & MUTED BLUES"
+    },
+    {
+      "name": "Light Sky",
+      "code": "7331",
+      "hex": "#C4DEE8",
+      "page": 5,
+      "category": "GREENS & MUTED BLUES"
+    },
+    {
+      "name": "Aqua Hint",
+      "code": "L114",
+      "hex": "#DFEDE6",
+      "page": 5,
+      "category": "GREENS & MUTED BLUES"
+    },
+    {
+      "name": "Caribbean Sky",
+      "code": "7419",
+      "hex": "#D3E2E0",
+      "page": 5,
+      "category": "GREENS & MUTED BLUES"
+    },
+    {
+      "name": "Forest Canopy",
+      "code": "7608",
+      "hex": "#97CCA7",
+      "page": 5,
+      "category": "GREENS & MUTED BLUES"
+    },
+    {
+      "name": "Green Fern - N",
+      "code": "9828",
+      "hex": "#AEB134",
+      "page": 5,
+      "category": "GREENS & MUTED BLUES"
+    },
+    {
+      "name": "Cilantro House",
+      "code": "7581",
+      "hex": "#3F6E4F",
+      "page": 5,
+      "category": "GREENS & MUTED BLUES"
+    },
+    {
+      "name": "Warm Sands",
+      "code": "8641",
+      "hex": "#D4A69A",
+      "page": 6,
+      "category": "WARM EARTHY TONES"
+    },
+    {
+      "name": "Sunderbans",
+      "code": "8519",
+      "hex": "#BC9161",
+      "page": 6,
+      "category": "WARM EARTHY TONES"
+    },
+    {
+      "name": "African Desert",
+      "code": "8467",
+      "hex": "#AC7D5A",
+      "page": 6,
+      "category": "WARM EARTHY TONES"
+    },
+    {
+      "name": "Wheat Sprig",
+      "code": "7891",
+      "hex": "#F0DFBE",
+      "page": 6,
+      "category": "WARM EARTHY TONES"
+    },
+    {
+      "name": "Sundrenched",
+      "code": "7914",
+      "hex": "#FCEBC0",
+      "page": 6,
+      "category": "WARM EARTHY TONES"
+    },
+    {
+      "name": "Botanica",
+      "code": "7886",
+      "hex": "#BD9759",
+      "page": 6,
+      "category": "WARM EARTHY TONES"
+    },
+    {
+      "name": "Cappadocia Coffee-N",
+      "code": "9955",
+      "hex": "#A1685E",
+      "page": 6,
+      "category": "WARM EARTHY TONES"
+    },
+    {
+      "name": "Amber - N",
+      "code": "5103",
+      "hex": "#B97555",
+      "page": 6,
+      "category": "WARM EARTHY TONES"
+    },
+    {
+      "name": "Stoneware",
+      "code": "8008",
+      "hex": "#EEB295",
+      "page": 6,
+      "category": "WARM EARTHY TONES"
+    },
+    {
+      "name": "Sheer Ice",
+      "code": "L111",
+      "hex": "#E4E8E1",
+      "page": 7,
+      "category": "MODERN GREYS"
+    },
+    {
+      "name": "Ice Grey",
+      "code": "8259",
+      "hex": "#E0E0DC",
+      "page": 7,
+      "category": "MODERN GREYS"
+    },
+    {
+      "name": "White Gold",
+      "code": "8292",
+      "hex": "#E3E3DC",
+      "page": 7,
+      "category": "MODERN GREYS"
+    },
+    {
+      "name": "Whispering Smoke",
+      "code": "8308",
+      "hex": "#D6D5CF",
+      "page": 7,
+      "category": "MODERN GREYS"
+    },
+    {
+      "name": "Sensibility",
+      "code": "8267",
+      "hex": "#BFCACC",
+      "page": 7,
+      "category": "MODERN GREYS"
+    },
+    {
+      "name": "Water's Edge",
+      "code": "8274",
+      "hex": "#B4C6CC",
+      "page": 7,
+      "category": "MODERN GREYS"
+    },
+    {
+      "name": "Sleigh Bells",
+      "code": "8295",
+      "hex": "#868685",
+      "page": 7,
+      "category": "MODERN GREYS"
+    },
+    {
+      "name": "Pigeon Grey",
+      "code": "8233",
+      "hex": "#A1A0A4",
+      "page": 7,
+      "category": "MODERN GREYS"
+    },
+    {
+      "name": "Grey Matter",
+      "code": "8304",
+      "hex": "#838584",
+      "page": 7,
+      "category": "MODERN GREYS"
+    }
+  ]
+}

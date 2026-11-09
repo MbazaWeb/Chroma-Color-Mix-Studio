@@ -62,6 +62,38 @@
           <div><input id="hexInput" name="hex" placeholder="#A4B878" maxlength="7" pattern="#?[0-9a-fA-F]{6}" autocomplete="off" spellcheck="false" aria-describedby="hexHint" required><button class="secondary" type="submit">Add HEX +</button></div>
           <small id="hexHint">Enter a six-digit HEX code.</small>
         </form>
+        <section class="image-picker" aria-labelledby="imagePickerTitle">
+          <div class="image-picker-head">
+            <div><h3 id="imagePickerTitle">Pick from a photo</h3><small id="imageMeta"></small></div>
+            <label class="image-upload-button">Upload image<input id="imageInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif" aria-label="Upload an image to sample"></label>
+          </div>
+          <p id="imageEmpty" class="image-empty">Upload a JPG, PNG, WebP or GIF to sample decoded sRGB pixels. Images stay on this device. Photo colors are not measured paint data.</p>
+          <div id="imageStage" class="image-stage" hidden>
+            <canvas id="imageCanvas" tabindex="0" aria-label="Uploaded image. Click or tap to select a pixel. Use arrow keys to move and Enter to select."></canvas>
+            <div class="image-readout">
+              <span class="image-live"><i id="imageLiveSwatch" aria-hidden="true"></i><span id="imageLiveHex">Move over the image</span></span>
+              <span class="image-selected"><i id="imageSwatch" aria-hidden="true"></i><span id="imageHex">No color selected</span></span>
+              <button class="secondary" id="imageUse" type="button" disabled>Add to mix +</button>
+            </div>
+            <small id="imageNote" role="status"></small>
+          </div>
+        </section>
+        <details class="reference-library">
+          <summary>Shade reference library</summary>
+          <p>45 approximate screen swatches extracted from the AapkaPainter Asian Paints shade card, pages 3–7. Names and codes are references; these are not official measured HEX values or paint formulas. Check a physical swatch before purchasing paint.</p>
+          <label for="shadeSearch">Search shade name or code</label>
+          <input id="shadeSearch" type="search" placeholder="e.g. Cream Pie or L152">
+          <p id="shadeStatus" role="status"></p>
+          <div id="shadeLibrary" class="shade-grid"></div>
+        </details>
+        <details class="reference-library">
+          <summary>Learn about paint mixing</summary>
+          <p>Hue is the color family; value is lightness; chroma is color intensity. A palette needs all three to describe a target.</p>
+          <p>Begin with source paints close to your target hue. Add a small amount of the stronger or darker paint, mix, and check a dried test patch before adding more.</p>
+          <p>Opacity, pigment formulation and tinting strength change the outcome. Mixing in white makes a tint; applying a transparent glaze over a light layer is a different process.</p>
+          <p>Paint can change hue, value and chroma during mixing. A straight line on a color map is a useful planning guide, not a guarantee of a physical recipe.</p>
+          <small>Adapted guidance: A260 Color Mixing, pp. 22–25, 35–43, 67–74. Interior palette reference: Asian Paints Royale Book of Colours; its p. 3 disclaimer describes displayed shades as indicative.</small>
+        </details>
         <div class="selection-tray" id="selectionTray"></div>
         <div class="step-actions">
           <span id="selectionCount">Choose a color to start</span>

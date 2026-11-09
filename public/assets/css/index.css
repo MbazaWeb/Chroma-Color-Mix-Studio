@@ -1528,3 +1528,30 @@ dialog .text-button {
 #recipeView summary { cursor: pointer; font-weight: 600; }
 #pigmentImport { display: block; max-width: 100%; margin: 10px 0; }
 #modelNote, #resultModel { line-height: 1.6; overflow-wrap: anywhere; }
+
+/* Image color picker */
+.image-picker { margin: 0 0 22px; padding: 18px; border: 1px dashed var(--glass-edge); border-radius: var(--radius-lg); background: var(--glass-strong); }
+.image-picker-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.image-picker h3 { margin: 0; font-size: 15px; }
+.image-picker-head small, .image-empty { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+.image-empty { margin: 10px 0 0; }
+.image-upload-button { position: relative; display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border-radius: 999px; background: var(--accent); color: var(--on-accent); font-size: 13px; font-weight: 600; cursor: pointer; }
+.image-upload-button:focus-within, #imageCanvas:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.image-upload-button input { position: absolute; inset: 0; width: 100%; opacity: 0; cursor: pointer; }
+.image-stage[hidden] { display: none; }
+.image-stage { margin-top: 14px; }
+#imageCanvas { display: block; width: 100%; height: auto; max-height: 420px; object-fit: contain; border-radius: 14px; background: repeating-conic-gradient(#e9ece4 0% 25%, #ffffff 0% 50%) 50% / 16px 16px; cursor: crosshair; touch-action: pan-y; }
+.image-readout { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; margin-top: 12px; font-family: var(--mono); font-size: 13px; }
+.image-live, .image-selected { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); }
+.image-live i, .image-selected i { display: inline-block; width: 22px; height: 22px; border: 1px solid var(--glass-edge); border-radius: 50%; }
+.image-selected { color: var(--ink); font-weight: 600; }
+.image-readout .secondary { margin-left: auto; }
+.image-readout .secondary:disabled { opacity: 0.5; cursor: not-allowed; }
+#imageNote { display: block; min-height: 1em; margin-top: 8px; color: var(--muted); font-size: 11px; }
+.reference-library { margin: 18px 0; padding: 16px; border: 1px solid var(--glass-edge); border-radius: 16px; }
+.reference-library summary { cursor: pointer; font-weight: 600; }
+#shadeSearch { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid var(--glass-edge); border-radius: 12px; }
+.shade-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; max-height: 360px; overflow: auto; }
+.shade-card { padding: 10px; border: 1px solid var(--glass-edge); border-radius: 12px; background: var(--sheet); text-align: left; }
+.shade-card i { display: block; height: 48px; margin-bottom: 6px; border: 1px solid var(--glass-edge); border-radius: 8px; }
+.shade-card span, .shade-card small { display: block; overflow-wrap: anywhere; }

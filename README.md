@@ -59,3 +59,27 @@ restricted datasets are bundled. Changing from measured to another model clears
 the measured recipe. Source and license fields travel with exported recipes.
 Paint simulation uses Spectral.js artistic influence weighting; it is not a mass
 or volume formulation tool. The measured model uses relative volume fractions.
+
+## Photo picker and reference library
+
+Upload a JPG, PNG, WebP or GIF locally, preview a decoded sRGB pixel, then click
+or tap to select it and choose Add to mix. Arrow keys move the sampling point;
+Enter selects. Images are not uploaded or saved in localStorage. Selected HEX
+colors are saved through the existing recipe session. Limits: 20 MB and 16 MP;
+the sampling canvas retains original decoded dimensions rather than resizing.
+Transparent pixels are rejected because an opaque HEX would lose alpha information.
+Camera processing, lighting, decoding and embedded color profiles affect photo
+colors; this tool does not measure physical paint.
+
+The searchable shade library contains 45 approximate PDF vector-fill RGB swatches
+from `asian-paints-shade-card.pdf`, curated by AapkaPainter, pages 3–7. Names and
+codes were spatially associated with adjacent vector rectangles and recorded with
+source page numbers in `public/assets/data/shade-references.json`. These are not
+manufacturer-certified HEX values, spectral data or mixing formulas. Full source
+PDFs are not redistributed. Verify physical samples for paint selection.
+
+The learning panel paraphrases concepts from A260 Color Mixing (pp. 22–25,
+35–43, 67–74). Asian Paints Royale Book of Colours is an interior inspiration
+reference; its page 3 disclaimer describes its displayed shades as indicative.
+Reference colors enter the same digital/estimated-paint calculation as custom
+HEX input and cannot be treated as measured K/S pigments.
