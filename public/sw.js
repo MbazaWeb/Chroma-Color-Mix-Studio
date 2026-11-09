@@ -1,4 +1,4 @@
-const CACHE_NAME = 'chroma-shell-v3';
+const CACHE_NAME = 'chroma-shell-v4';
 const APP_FILES = [
   '/',
   '/index.html',
